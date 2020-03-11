@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+  - ./bases/cluster-api
+  - ./bases/cluster-api-provider-metal
+  - ./bases/cluster-api-bootstrap-provider-talos
+  - ./bases/metal-controller-manager
+  - ./bases/metal-metadata-server
+resources:
+  - namespace.yaml
+namespace: arges-system
+commonLabels:
+  arges: v1alpha1
