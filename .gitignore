@@ -1,0 +1,7 @@
+examples/clusters/metal/generate/*
+examples/clusters/metal/cluster.yaml
+examples/clusters/metal/talosconfigs.yaml
+examples/clusters/metal/machines.yaml
+!examples/clusters/metal/generate/.gitkeep
+examples/mgmt/discovery_kubeconfig_patch.yaml
+examples/mgmt/default_environment_patch.yaml
