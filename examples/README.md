@@ -115,6 +115,10 @@ The machines should do a number of things:
 - download the discovery `kubeconfig`
 - create a custom `server` resource in the Kubernetes cluster hosting Arges
 
+A flow of the registration process looks like:
+
+<img src="../docs/img/server-registration.png" width="500">
+
 Once this process is done, the machine will shutdown, and you should something like the following:
 
 ```bash
@@ -126,6 +130,10 @@ NAME                                   AGE
 ### Creating a Cluster
 
 Once we have all the machines registered that we would like to be available as resources for creating clusters, we can start creating clusters.
+
+A high level flow of all the steps mentioned below looks like:
+
+<img src="../docs/img/cluster-bootstrap-flow.png" width="500">
 
 #### Generate the Talos Configuration Files
 
@@ -265,3 +273,12 @@ example-0   provisioned
 ```
 
 [1]: https://www.talos.dev "Talos"
+
+## Extras
+
+One of the more interesting ways we have deployed this stack is by utilizing BGP on the hosts and inside of Kubernetes itself.
+This allows for services and pods in the cluster to be accessible by IP directly over the network, as well as all API servers being available by a single known IP that's attached to the loopback interface.
+
+A simple diagram of the BGP route propagation looks like:
+
+<img src="../docs/img/bgp-route-propagation.png" width="700">
