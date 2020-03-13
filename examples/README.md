@@ -167,7 +167,7 @@ This same thing should be done for `controlplane.yaml` and `join.yaml`.
 
 #### Create the MetalCluster Resource
 
-Use the following as a template and create `cluster/metal/cluster.yaml`.
+Use the following as a template and create `clusters/metal/cluster.yaml`.
 
 ```yaml
 apiVersion: cluster.x-k8s.io/v1alpha2
@@ -199,7 +199,7 @@ spec:
 
 #### Create the TalosConfig Resources
 
-Use the following as a template and create `cluster/metal/talosconfigs.yaml`.
+Use the following as a template and create `clusters/metal/talosconfigs.yaml`.
 
 ```yaml
 apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
@@ -217,7 +217,7 @@ Using the contents of `init.yaml`, generated in a previous step, update the `spe
 
 #### Create The MetalMachine Resources
 
-Use the following as a template and create `cluster/metal/machines.yaml`.
+Use the following as a template and create `clusters/metal/machines.yaml`.
 
 ```yaml
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
