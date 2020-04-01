@@ -142,7 +142,7 @@ We will start by creating the configs required by Talos:
 Run the following:
 
 ```bash
-$ osctl config generate example-0 https://192.168.1.101:6443 -o ./clusters/metal/generate
+$ talosctl gen config example-0 https://192.168.1.101:6443 -o ./clusters/metal/generate
 generating PKI and tokens
 created clusters/metal/generate/init.yaml
 created clusters/metal/generate/controlplane.yaml
@@ -150,10 +150,10 @@ created clusters/metal/generate/join.yaml
 created clusters/metal/generate/talosconfig
 ```
 
-Configure `osctl`:
+Configure `talosctl`:
 
 ```bash
-osctl --talosconfig clusters/metal/generate/talosconfig config endpoint 192.168.1.101
+talosctl --talosconfig clusters/metal/generate/talosconfig config endpoint 192.168.1.101
 ```
 
 Make any edits the Talos configs now.
