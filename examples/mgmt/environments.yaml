@@ -5,7 +5,7 @@ metadata:
   namespace: arges-system
 spec:
   kernel:
-    url: 'https://github.com/talos-systems/talos/releases/download/v0.4.0-alpha.6/vmlinuz'
+    url: 'https://github.com/talos-systems/talos/releases/download/v0.4.1/vmlinuz'
     args:
       - initrd=initramfs.xz
       - page_poison=1
@@ -22,4 +22,4 @@ spec:
       - panic=0
       - talos.platform=metal
   initrd:
-    url: 'https://github.com/talos-systems/talos/releases/download/v0.4.0-alpha.6/initramfs.xz'
+    url: 'https://github.com/talos-systems/talos/releases/download/v0.4.1/initramfs.xz'

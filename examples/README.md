@@ -10,10 +10,10 @@ The `kubeconfig` should be configured to talk to the cluster hosting the Arges c
 This will deploy a number of components:
 
 - Cluster API
-- Talos Cluster API Talos bootstrap provider
+- Cluster API Talos bootstrap provider
 - Cluster API Metal infrastructure provider
 - Metal controller manager
-- and the Metal metadata server
+- Metal metadata server
 
 ### Deploying Arges
 
@@ -56,9 +56,6 @@ You should see the following components running as pods in the `arges-system` na
 ```bash
 $ kubectl get pods -n arges-system
 NAME                                        READY   STATUS    RESTARTS   AGE
-cabpt-controller-manager-7fdd65469c-pfkc9   2/2     Running   0          11s
-capi-controller-manager-76798c8d9d-t8k4t    1/1     Running   0          11s
-capm-controller-manager-6768c57dc5-7m2vm    2/2     Running   0          11s
 metal-controller-manager-c65c7b478-srv49    2/2     Running   0          10s
 metal-metadata-server-6b754c8d84-v9sb4      1/1     Running   0          10s
 ```
@@ -68,11 +65,37 @@ You should also see the following services:
 ```bash
 $ kubectl get services -n arges-system -owide
 NAME                                       TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE   SELECTOR
-cabpt-controller-manager-metrics-service   ClusterIP   10.96.0.200   <none>        8443/TCP   6s    arges=v1alpha1,control-plane=cabpt-controller-manager
 metal-controller-manager-metrics-service   ClusterIP   10.96.0.3     <none>        8443/TCP   6s    arges=v1alpha1,control-plane=metal-controller-manager
 metal-ipxe                                 ClusterIP   10.96.0.232   <none>        80/TCP     6s    arges=v1alpha1,control-plane=metal-controller-manager
 metal-metadata-server                      ClusterIP   10.96.0.40    <none>        80/TCP     6s    app=metal-metadata-server,arges=v1alpha1
 metal-tftp                                 ClusterIP   10.96.0.233   <none>        69/UDP     6s    arges=v1alpha1,control-plane=metal-controller-manager
+```
+
+Download the latest release of ClusterAPI's clusterctl tool.
+Releases can be found [here](https://github.com/kubernetes-sigs/cluster-api/releases/latest).
+
+Create a file at `~/.cluster-api/clusterctl.yaml` with the following:
+
+```yaml
+providers:
+  - name: "metal"
+    url: "https://github.com/talos-systems/cluster-api-provider-metal/releases/latest/infrastructure-components.yaml"
+    type: "InfrastructureProvider"
+  - name: "talos"
+    url: "https://github.com/talos-systems/cluster-api-bootstrap-provider-talos/releases/latest/bootstrap-components.yaml"
+    type: "BootstrapProvider"
+```
+
+Initialize all ClusterAPI components with `clusterctl init --control-plane "-" --bootstrap "talos" --infrastructure "metal" --target-namespace arges-system`
+
+You should now see the following components running as pods in the `arges-system` namespace:
+
+```bash
+$ kubectl get pods -n arges-system
+NAME                                        READY   STATUS    RESTARTS   AGE
+cabpt-controller-manager-7fdd65469c-pfkc9   2/2     Running   0          11s
+capi-controller-manager-76798c8d9d-t8k4t    1/1     Running   0          11s
+capm-controller-manager-6768c57dc5-7m2vm    2/2     Running   0          11s
 ```
 
 #### Exposing the Arges Services
@@ -170,7 +193,7 @@ This same thing should be done for `controlplane.yaml` and `join.yaml`.
 Use the following as a template and create `clusters/metal/cluster.yaml`.
 
 ```yaml
-apiVersion: cluster.x-k8s.io/v1alpha2
+apiVersion: cluster.x-k8s.io/v1alpha3
 kind: Cluster
 metadata:
   name: example-0
@@ -183,18 +206,18 @@ spec:
       cidrBlocks:
         - 10.96.0.0/16
   infrastructureRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
     kind: MetalCluster
     name: example-0
 ---
-apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
 kind: MetalCluster
 metadata:
   name: example-0
 spec:
-  apiEndpoints:
-    - host: <ENDPOINT>
-      port: 6443
+  controlPlaneEndpoint:
+    host: <ENDPOINT>
+    port: 6443
 ```
 
 #### Create the TalosConfig Resources
@@ -202,7 +225,7 @@ spec:
 Use the following as a template and create `clusters/metal/talosconfigs.yaml`.
 
 ```yaml
-apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
 kind: TalosConfig
 metadata:
   name: controlplane-0
@@ -220,7 +243,7 @@ Using the contents of `init.yaml`, generated in a previous step, update the `spe
 Use the following as a template and create `clusters/metal/machines.yaml`.
 
 ```yaml
-apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
 kind: MetalMachine
 metadata:
   name: controlplane-0
@@ -234,7 +257,7 @@ spec:
     user: <USER>
     pass: <PASSWORD>
 ---
-apiVersion: cluster.x-k8s.io/v1alpha2
+apiVersion: cluster.x-k8s.io/v1alpha3
 kind: Machine
 metadata:
   labels:
@@ -242,16 +265,17 @@ metadata:
     cluster.x-k8s.io/control-plane: "true"
   name: controlplane-0
 spec:
+  clusterName: example-0
   bootstrap:
     configRef:
-      apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
+      apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
       kind: TalosConfig
       name: controlplane-0
   infrastructureRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha3
     kind: MetalMachine
     name: controlplane-0
-  version: 1.17.3
+  version: 1.18.0
 ```
 
 #### Create the Cluster
