@@ -5,4 +5,4 @@ bases:
 images:
   - name: server
     newName: docker.io/autonomy/metal-metadata-server
-    newTag: 959cc7b
+    newTag: 72d6ac2
