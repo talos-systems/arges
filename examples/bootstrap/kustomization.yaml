@@ -24,3 +24,10 @@ patchesJson6902:
       name: metal-metadata-server
       namespace: arges-system
     path: metadata_patch.yaml
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: metal-controller-manager
+      namespace: arges-system
+    path: api_endpoint.yaml
