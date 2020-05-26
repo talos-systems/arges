@@ -21,18 +21,6 @@ To get started with Arges, we need to know a few bits of information beforehand.
 Determining this information is dependent on how you choose to expose the Arges `metal-ipxe`, `metal-metadata-server`, and `metal-tftp` services.
 However you choose to expose these services, we simply need to know the endpoint for each.
 
-Once you determine these, and you have the discovery `kubeconfig` available over http, export the endpoints for the `metal-metadata-server` service and discovery `kubeconfig` endpoint:
-
-```bash
-cat <<EOF >mgmt/discovery_kubeconfig_patch.yaml
-- op: add
-  path: /spec/template/spec/containers/1/args/-
-  value: --discovery-kubeconfig=${DISCOVERY_KUBECONFIG_ENDPOINT}
-EOF
-```
-
-> Note: `DISCOVERY_KUBECONFIG_ENDPOINT` should include the scheme (e.g. http or https).
-
 We will also create a dummy patch file to satisfy a requirement from kustomize.
 This patch will be updated later.
 
@@ -135,7 +123,6 @@ To register machines, simply power them on.
 The machines should do a number of things:
 
 - boot using the deployed TFTP, and iPXE services in Arges
-- download the discovery `kubeconfig`
 - create a custom `server` resource in the Kubernetes cluster hosting Arges
 
 A flow of the registration process looks like:
