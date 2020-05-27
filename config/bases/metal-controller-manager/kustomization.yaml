@@ -5,4 +5,4 @@ bases:
 images:
   - name: controller
     newName: docker.io/autonomy/metal-controller-manager
-    newTag: ef29626
+    newTag: 31ca177
