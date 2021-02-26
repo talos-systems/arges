@@ -1,8 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-bases:
-  - git@github.com:talos-systems/metal-metadata-server/config/default?ref=master
-images:
-  - name: server
-    newName: docker.io/autonomy/metal-metadata-server
-    newTag: 72d6ac2
