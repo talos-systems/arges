@@ -1,0 +1,19 @@
+{
+  "name": "docs",
+  "private": true,
+  "scripts": {
+    "build": "gridsome build",
+    "develop": "gridsome develop",
+    "explore": "gridsome explore"
+  },
+  "dependencies": {
+    "@gridsome/source-filesystem": "^0.6.2",
+    "@gridsome/source-graphql": "^0.1.0",
+    "@gridsome/transformer-remark": "^0.6.1",
+    "gridsome": "^0.7.0",
+    "gridsome-source-github-api": "^0.1.4"
+  },
+  "devDependencies": {
+    "gridsome-plugin-tailwindcss": "^3.0.1"
+  }
+}
